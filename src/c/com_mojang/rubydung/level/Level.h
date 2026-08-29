@@ -16,6 +16,9 @@ struct Level {
 Level* Level_new(int width, int height, int depth);
 void Level_free(Level* l);
 
+/* Returns an array of AABB* for tiles intersecting box. The caller must free the AABB* array and each AABB via free(). */
+struct AABB** Level_getCubes(Level* level, const struct AABB* box, int* outCount);
+
 #ifdef __cplusplus
 }
 #endif
