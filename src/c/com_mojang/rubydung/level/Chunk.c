@@ -1,6 +1,7 @@
 #include "com_mojang/rubydung/level/Chunk.h"
 #include "com_mojang/rubydung/level/Textures.h"
 #include "com_mojang/rubydung/level/Tile.h"
+#include "com_mojang/rubydung/level/Tessellator.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -25,6 +26,8 @@ Chunk* Chunk_new(Level* level, int minX, int minY, int minZ, int maxX, int maxY,
     if (TEXTURE_ID == -1) {
         TEXTURE_ID = Textures_loadTexture("resources/terrain.png", GL_NEAREST);
     }
+    /* Initialize tessellator once */
+    tessellator_init(&TESSELLATOR_INSTANCE);
     return c;
 }
 
@@ -35,7 +38,9 @@ void Chunk_rebuild(Chunk* chunk, int layer) {
     Chunk_rebuiltThisFrame++;
     chunk->dirty = 0;
 
-    tessellator_init(&TESSELLATOR_INSTANCE);
+    /* Setup tessellator transform to map world coords to NDC. Caller (Main) should set proper transform globally. */
+    /* Bind texture */
+    glBindTexture(GL_TEXTURE_2D, TEXTURE_ID);
 
     for (int x = chunk->minX; x < chunk->maxX; ++x) {
         for (int y = chunk->minY; y < chunk->maxY; ++y) {
@@ -61,7 +66,7 @@ void Chunk_render(Chunk* chunk, int layer) {
         Chunk_rebuild(chunk, 0);
         Chunk_rebuild(chunk, 1);
     }
-    /* No display lists; render directly via tessellator (no-op) */
+    /* Chunk_rebuild already flushes tessellator drawing. For dynamic drawing we might call tessellator_flush here. */
 }
 
 void Chunk_setDirty(Chunk* chunk) {
