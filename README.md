@@ -1,27 +1,13 @@
-# rd-131655 (Pre-Classic)
-Development phase: May 10 - May 13, 2009
+# README
 
-[![Demo](.assets/demo.gif)](https://www.youtube.com/watch?v=UMpv5kZ9-rE)
-<br>Cave game tech test video released on May 13, 2009.
+This branch contains an initial full-port attempt from Java to C (c-rewrite branch).
 
-## Accuracy
-The original version was never released to the public.
-The copy is based on the very first video.
-Due to the similarity of the upcoming released versions,
-it is possible to recreate the unreleased version.
+Notes:
+- Java sources in src/main/java were not deleted by the converter (GitHub API limitations for deletions via this tool). Instead they remain in the repository root. Please remove them manually if you want them deleted.
+- This port targets Windows/macOS/Linux via GLFW + GLAD + stb_image. The CMake configuration fetches these dependencies automatically.
+- To build on Windows:
+  - Install CMake and a C compiler (MSVC or MinGW)
+  - Run: mkdir build && cd build && cmake -G "Visual Studio 17 2022" .. && cmake --build . --config Release
+  - The terrain.png resource will be copied to the executable folder on build.
 
-#### Recreated features:
-- Cave generation
-- 8x8x8 Chunks
-
-## References
-- [Minecraft Wiki - Java_Edition_pre-Classic_rd-131655](https://minecraft.gamepedia.com/Java_Edition_pre-Classic_rd-131655)
-- [Cave game tech test - Nizzotch on YouTube](https://www.youtube.com/watch?v=UMpv5kZ9-rE)
-- [IRC logs](https://web.archive.org/web/20200528035558/https://echelog.com/logs/browse/lwjgl/1242511200) to recreate the unreleased features:
-  - ``[18:55:45] <Notch_> the chunk size is 16x16 now..``
-  - ``[18:56:47] <Notch_> 8x8 chunks are SLOWER``
-  - ``[20:02:58] <Notch_> it takes like 20 seconds to grow a 256*256*64 map, though. :-\``
-
-## Setup
-1. Clone the project
-2. Execute the gradle task ``run``
+This is an initial runnable port. Tile rendering is a PoC and may not reproduce exact visuals; next steps include completing Tessellator -> VBO rendering and porting remaining game logic.
